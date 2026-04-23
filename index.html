@@ -19,10 +19,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .lock-logo{font-family:'DM Serif Display',serif;font-size:36px;color:var(--accent);margin-bottom:8px;}
 .lock-sub{font-size:13px;color:var(--text3);margin-bottom:48px;letter-spacing:0.05em;}
 .lock-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:10px;width:100%;max-width:320px;}
-#passphrase-input{width:100%;max-width:320px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;text-align:center;letter-spacing:0.08em;margin-bottom:12px;}
+#passphrase-input{width:100%;max-width:320px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;}
 #passphrase-input:focus{border-color:var(--accent);}
 .lock-error{color:var(--danger);font-size:13px;min-height:18px;margin-bottom:12px;text-align:center;}
-#lock-btn{width:100%;max-width:320px;padding:14px;background:var(--accent);color:#1a1a17;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;}
+#lock-btn{width:100%;max-width:320px;padding:14px;background:var(--accent);color:#1a1a17;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-top:12px;}
+#lock-btn:active{transform:scale(0.98);}
 #app{display:none;}
 .header{padding:52px 20px 16px;background:linear-gradient(180deg,rgba(200,169,110,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border);}
 .header-eyebrow{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:4px;}
@@ -34,7 +35,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .sync-label{font-size:11px;color:var(--text3);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border:none;background:none;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.2s;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border:none;background:none;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;transition:color 0.2s;}
 .nav-btn.active{color:var(--accent);}
 .nav-btn svg{width:22px;height:22px;}
 .view{display:none;padding:20px 20px 90px;}
@@ -51,18 +52,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .task-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px;}
 .task-dot.overdue{background:var(--danger);}.task-dot.soon{background:var(--warning);}.task-dot.upcoming{background:var(--success);}
 .task-name{font-size:14px;font-weight:500;}.task-meta{font-size:12px;color:var(--text2);margin-top:2px;}
-.btn-primary{width:100%;padding:14px;background:var(--accent);color:#1a1a17;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;}
+.btn-primary{width:100%;padding:14px;background:var(--accent);color:#1a1a17;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;}
 .btn-ghost{padding:8px 14px;background:none;color:var(--text2);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;}
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
-.btn-sm{padding:4px 10px;border-radius:6px;border:1px solid var(--border);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;background:var(--surface2);color:var(--text2);}
+.btn-sm{padding:4px 10px;border-radius:6px;border:1px solid var(--border);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;background:var(--surface2);color:var(--text);transition:all 0.2s;}
 .btn-sm.done{background:var(--success);border-color:var(--success);color:#fff;}
 .btn-danger{color:var(--danger)!important;border-color:var(--danger)!important;}
 .form-group{margin-bottom:14px;}
 label{display:block;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:6px;}
-input,select,textarea{width:100%;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;}
+input,select,textarea{width:100%;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
 input:focus,select:focus,textarea:focus{border-color:var(--accent);}
 select option{background:var(--surface2);}
 textarea{resize:vertical;min-height:80px;}
+input[type="date"]{width:100%;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;cursor:pointer;}
+input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1) brightness(0.8);cursor:pointer;}
+input[type="date"]:focus{border-color:var(--accent);}
 .inv-item{padding:14px;background:var(--surface2);border-radius:10px;margin-bottom:10px;border:1px solid var(--border);cursor:pointer;}
 .inv-item:hover{border-color:var(--accent);}
 .inv-header{display:flex;justify-content:space-between;align-items:flex-start;}
@@ -76,13 +80,14 @@ textarea{resize:vertical;min-height:80px;}
 .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px;width:100%;padding-bottom:calc(24px + env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto;border-top:1px solid var(--border);}
 .modal-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:20px;}
 .modal-close{float:right;background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer;line-height:1;}
-.fab{position:fixed;bottom:80px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,169,110,0.35);z-index:50;}
+.fab{position:fixed;bottom:80px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(200,169,110,0.3);transition:transform 0.2s;}
+.fab:active{transform:scale(0.95);}
 .fab svg{width:22px;height:22px;color:#1a1a17;}
 .filter-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;}
 .filter-row::-webkit-scrollbar{display:none;}
 .filter-chip{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;}
 .filter-chip.active{background:var(--accent);border-color:var(--accent);color:#1a1a17;}
-.notif-bar{position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--success);color:#fff;padding:12px 20px;font-size:13px;font-weight:500;text-align:center;transform:translateY(-100%);transition:transform 0.3s;pointer-events:none;}
+.notif-bar{position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--success);color:#fff;padding:12px 20px;font-size:13px;font-weight:500;text-align:center;transform:translateY(-100%);transition:transform 0.3s;}
 .notif-bar.show{transform:translateY(0);}.notif-bar.err{background:var(--danger);}
 .empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;}
 .empty-icon{font-size:36px;margin-bottom:10px;}
@@ -155,7 +160,7 @@ textarea{resize:vertical;min-height:80px;}
       Dashboard
     </button>
     <button class="nav-btn" data-view="inventory" onclick="switchView('inventory')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
       Inventory
     </button>
     <button class="nav-btn" data-view="tasks" onclick="switchView('tasks')">
@@ -186,7 +191,7 @@ textarea{resize:vertical;min-height:80px;}
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const CONFIG = {
   SUPABASE_URL: 'https://wtubcgzdbpmqeniccujy.supabase.co',
-  SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0dWJjZ3pkYnBtcWVuaWNjdWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NzA5MTgsImV4cCI6MjA5MjU0NjkxOH0.AuKxKl_QSWl9Eg6vfQUzXLO4AYM43Xscpd-xg4zfUlE',
+  SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0dWJjZ3pkYnBtcWVuaWNjdWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NzA5MTgsImV4cCI6MjA5MjU0NjkxOH0.AuKxKl_QSWl9E0QkpGBzF_hGw-Wm2N-rKZgXWj2USkU',
   PASSPHRASE:   'kempln'
 };
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -284,7 +289,7 @@ function renderDashboard(){
 
 function taskRow(t){
   const inv=inventory.find(i=>i.id===t.inv_id);
-  return `<div class="task-item"><div class="task-dot ${urgency(t.next_date)}"></div><div style="flex:1;min-width:0"><div class="task-name">${t.name}</div><div class="task-meta">${urgencyLabel(t.next_date)}${inv?' · '+inv.name:''}</div></div><button class="btn-sm done" onclick="markDone('${t.id}')">Done</button></div>`;
+  return `<div class="task-item"><div class="task-dot ${urgency(t.next_date)}"></div><div style="flex:1;min-width:0"><div class="task-name">${t.name}</div><div class="task-meta">${urgencyLabel(t.next_date)}${inv?' · '+inv.name:''}</div></div></div>`;
 }
 
 function renderInventory(){
@@ -292,7 +297,7 @@ function renderInventory(){
   document.getElementById('cat-filters').innerHTML=cats.map(c=>`<button class="filter-chip ${c===invFilter?'active':''}" onclick="setFilter('${c}')">${c}</button>`).join('');
   const filtered=invFilter==='All'?inventory:inventory.filter(i=>i.cat===invFilter);
   document.getElementById('inventory-list').innerHTML=filtered.length
-    ?filtered.map(item=>`<div class="inv-item" onclick="showInvDetail('${item.id}')"><div class="inv-header"><div class="inv-name">${item.name}</div><div class="inv-cat">${item.cat}</div></div><div class="inv-details">${[item.model&&'Model: '+item.model,item.location,item.installed&&'Installed '+displayDate(item.installed)].filter(Boolean).join(' · ')}</div></div>`).join('')
+    ?filtered.map(item=>`<div class="inv-item" onclick="showInvDetail('${item.id}')"><div class="inv-header"><div class="inv-name">${item.name}</div><div class="inv-cat">${item.cat}</div></div><div class="inv-details">${item.model?'<div>Model: '+item.model+'</div>':''}${item.installed?'<div>Installed: '+displayDate(item.installed)+'</div>':''}</div></div>`).join('')
     :'<div class="empty"><div class="empty-icon">📦</div>No items yet — tap + to add</div>';
 }
 function setFilter(c){invFilter=c;renderInventory();}
@@ -301,10 +306,11 @@ function showInvDetail(id){
   const item=inventory.find(i=>i.id===id);
   const rel=tasks.filter(t=>t.inv_id===id);
   document.getElementById('modal-detail-body').innerHTML=`
-    <div style="margin-bottom:16px"><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:4px">${item.cat}</div><div style="font-family:'DM Serif Display',serif;font-size:22px">${item.name}</div></div>
-    ${[['Model',item.model],['Serial',item.serial],['Location',item.location],['Installed',item.installed?displayDate(item.installed):''],['Notes',item.notes]].filter(([,v])=>v).map(([k,v])=>`<div style="margin-bottom:12px"><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:2px">${k}</div><div style="font-size:14px;color:var(--text2)">${v}</div></div>`).join('')}
+    <div style="margin-bottom:16px"><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:4px">${item.cat}</div><div style="font-size:20px;font-weight:600;">${item.name}</div></div>
+    ${[['Model',item.model],['Serial',item.serial],['Location',item.location],['Installed',item.installed?displayDate(item.installed):''],['Notes',item.notes]].filter(([,v])=>v).map(([k,v])=>`<div style="margin-bottom:8px;font-size:13px;line-height:1.6"><span style="color:var(--text3);">${k}:</span> ${v}</div>`).join('')}
     ${rel.length?`<div style="margin-top:16px"><div class="card-label">Linked Tasks</div>${rel.map(t=>`<div class="task-item"><div class="task-dot ${urgency(t.next_date)}"></div><div><div class="task-name">${t.name}</div><div class="task-meta">${urgencyLabel(t.next_date)}</div></div></div>`).join('')}</div>`:''}
-    <div style="display:flex;gap:10px;margin-top:20px"><button class="btn-ghost" onclick="editInv('${id}')">Edit</button><button class="btn-ghost btn-danger" onclick="deleteInv('${id}')">Delete</button></div>`;
+    <div style="display:flex;gap:10px;margin-top:20px"><button class="btn-ghost" onclick="editInv('${id}')">Edit</button><button class="btn-ghost btn-danger" onclick="deleteInv('${id}')">Delete</button></div>
+  `;
   openModal('modal-detail');
 }
 
@@ -314,7 +320,7 @@ function renderTasks(){
     ?sorted.map(t=>{
         const inv=inventory.find(i=>i.id===t.inv_id);
         const u=urgency(t.next_date);
-        return `<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:16px;font-weight:600;flex:1;padding-right:8px">${t.name}</div><span class="badge ${u==='overdue'?'badge-red':u==='soon'?'badge-yellow':'badge-green'}">${u==='overdue'?'OVERDUE':u==='soon'?'SOON':'UPCOMING'}</span></div><div style="font-size:13px;color:var(--text2);margin-bottom:4px">${displayDate(t.next_date)} · ${t.freq}</div>${inv?`<div style="font-size:12px;color:var(--text3)">🔧 ${inv.name}</div>`:''}${t.notes?`<div style="font-size:12px;color:var(--text3);margin-top:4px">${t.notes}</div>`:''}<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-sm done" onclick="markDone('${t.id}')">✓ Done</button><button class="btn-sm" onclick="editTask('${t.id}')">Edit</button><button class="btn-sm btn-danger" onclick="deleteTask('${t.id}')">Delete</button></div></div>`;
+        return `<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:16px;font-weight:600;">${t.name}</div><button class="btn-sm ${u==='overdue'?'done':''}" onclick="markDone('${t.id}')">${u==='overdue'?'Overdue':'Mark Done'}</button></div><div style="font-size:12px;color:var(--text2);margin-bottom:4px">${urgencyLabel(t.next_date)}${inv?' · '+inv.name:''}</div><div style="font-size:12px;color:var(--text3);">${t.freq}${t.notes?'<div style="margin-top:6px;color:var(--text2);">'+t.notes+'</div>':''}</div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn-sm" onclick="editTask('${t.id}')">Edit</button></div></div>`;
       }).join('')
     :'<div class="empty"><div class="empty-icon">📋</div>No tasks yet — tap + to add</div>';
 }
@@ -357,7 +363,7 @@ function openInvForm(editId){
     <div class="form-group"><label>Model / Make</label><input id="f-model" value="${item.model||''}" placeholder="Model number"></div>
     <div class="form-group"><label>Serial Number</label><input id="f-serial" value="${item.serial||''}" placeholder="Serial #"></div>
     <div class="form-group"><label>Location in Home</label><input id="f-location" value="${item.location||''}" placeholder="e.g. Utility Room"></div>
-    <div class="form-group"><label>Install Date</label><input type="date" id="f-installed" value="${item.installed||''}"></div>
+    <div class="form-group"><label>Install Date</label><input type="date" id="f-installed" value="${item.installed||''}" placeholder="Select installation date"></div>
     <div class="form-group"><label>Notes</label><textarea id="f-notes">${item.notes||''}</textarea></div>
     <button class="btn-primary" onclick="saveInv('${editId||''}')">Save Item</button>`;
   openModal('modal-add');
@@ -383,7 +389,7 @@ function openTaskForm(editId){
     <div class="form-group"><label>Task Name *</label><input id="f-tname" value="${t.name||''}" placeholder="e.g. Replace HVAC Filters"></div>
     <div class="form-group"><label>Linked Item (optional)</label><select id="f-tinv"><option value="">— None —</option>${inventory.map(i=>`<option value="${i.id}" ${t.inv_id===i.id?'selected':''}>${i.name}</option>`).join('')}</select></div>
     <div class="form-group"><label>Frequency</label><select id="f-tfreq">${TASK_FREQS.map(f=>`<option ${t.freq===f?'selected':''}>${f}</option>`).join('')}</select></div>
-    <div class="form-group"><label>Next Due Date *</label><input type="date" id="f-tnext" value="${t.next_date||fmtDate(new Date())}"></div>
+    <div class="form-group"><label>Next Due Date *</label><input type="date" id="f-tnext" value="${t.next_date||fmtDate(new Date())}" placeholder="Select next due date"></div>
     <div class="form-group"><label>Notes</label><textarea id="f-tnotes">${t.notes||''}</textarea></div>
     <button class="btn-primary" onclick="saveTask('${editId||''}')">Save Task</button>`;
   openModal('modal-add');
@@ -393,7 +399,7 @@ async function saveTask(editId){
   const name=document.getElementById('f-tname').value.trim();
   const next_date=document.getElementById('f-tnext').value;
   if(!name||!next_date){alert('Name and date are required');return;}
-  const row={id:editId||uid(),name,inv_id:document.getElementById('f-tinv').value||null,freq:document.getElementById('f-tfreq').value,next_date,notes:document.getElementById('f-tnotes').value.trim(),last_done:editId?tasks.find(x=>x.id===editId)?.last_done:null};
+  const row={id:editId||uid(),name,inv_id:document.getElementById('f-tinv').value||null,freq:document.getElementById('f-tfreq').value,next_date,notes:document.getElementById('f-tnotes').value.trim()};
   sync('syncing','Saving...');
   try{
     if(editId){await SB.update('tasks',editId,row);const i=tasks.findIndex(x=>x.id===editId);tasks[i]=row;}
