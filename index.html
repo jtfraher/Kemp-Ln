@@ -64,9 +64,6 @@ input,select,textarea{width:100%;padding:11px 13px;background:var(--surface2);bo
 input:focus,select:focus,textarea:focus{border-color:var(--accent);}
 select option{background:var(--surface2);}
 textarea{resize:vertical;min-height:80px;}
-input[type="date"]{width:100%;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;cursor:pointer;}
-input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1) brightness(0.8);cursor:pointer;}
-input[type="date"]:focus{border-color:var(--accent);}
 .inv-item{padding:14px;background:var(--surface2);border-radius:10px;margin-bottom:10px;border:1px solid var(--border);cursor:pointer;}
 .inv-item:hover{border-color:var(--accent);}
 .inv-header{display:flex;justify-content:space-between;align-items:flex-start;}
@@ -320,7 +317,7 @@ function renderTasks(){
     ?sorted.map(t=>{
         const inv=inventory.find(i=>i.id===t.inv_id);
         const u=urgency(t.next_date);
-        return `<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:16px;font-weight:600;">${t.name}</div><button class="btn-sm ${u==='overdue'?'done':''}" onclick="markDone('${t.id}')">${u==='overdue'?'Overdue':'Mark Done'}</button></div><div style="font-size:12px;color:var(--text2);margin-bottom:4px">${urgencyLabel(t.next_date)}${inv?' · '+inv.name:''}</div><div style="font-size:12px;color:var(--text3);">${t.freq}${t.notes?'<div style="margin-top:6px;color:var(--text2);">'+t.notes+'</div>':''}</div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn-sm" onclick="editTask('${t.id}')">Edit</button></div></div>`;
+        return `<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:16px;font-weight:600">${t.name}</div><button class="btn-sm ${u==='overdue'?'done':''}" onclick="markDone('${t.id}')">${u==='overdue'?'Overdue':'Mark Done'}</button></div><div style="font-size:12px;color:var(--text2);margin-bottom:4px">${urgencyLabel(t.next_date)}${inv?' · '+inv.name:''}</div><div style="font-size:12px;color:var(--text3)">${t.freq}${t.notes?'<div style="margin-top:6px;color:var(--text2)">'+t.notes+'</div>':''}</div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn-sm" onclick="editTask('${t.id}')">Edit</button></div></div>`;
       }).join('')
     :'<div class="empty"><div class="empty-icon">📋</div>No tasks yet — tap + to add</div>';
 }
@@ -363,7 +360,7 @@ function openInvForm(editId){
     <div class="form-group"><label>Model / Make</label><input id="f-model" value="${item.model||''}" placeholder="Model number"></div>
     <div class="form-group"><label>Serial Number</label><input id="f-serial" value="${item.serial||''}" placeholder="Serial #"></div>
     <div class="form-group"><label>Location in Home</label><input id="f-location" value="${item.location||''}" placeholder="e.g. Utility Room"></div>
-    <div class="form-group"><label>Install Date</label><input type="date" id="f-installed" value="${item.installed||''}" placeholder="Select installation date"></div>
+    <div class="form-group"><label>Install Date</label><input type="text" id="f-installed" value="${item.installed||''}" placeholder="YYYY-MM-DD"></div>
     <div class="form-group"><label>Notes</label><textarea id="f-notes">${item.notes||''}</textarea></div>
     <button class="btn-primary" onclick="saveInv('${editId||''}')">Save Item</button>`;
   openModal('modal-add');
@@ -389,7 +386,7 @@ function openTaskForm(editId){
     <div class="form-group"><label>Task Name *</label><input id="f-tname" value="${t.name||''}" placeholder="e.g. Replace HVAC Filters"></div>
     <div class="form-group"><label>Linked Item (optional)</label><select id="f-tinv"><option value="">— None —</option>${inventory.map(i=>`<option value="${i.id}" ${t.inv_id===i.id?'selected':''}>${i.name}</option>`).join('')}</select></div>
     <div class="form-group"><label>Frequency</label><select id="f-tfreq">${TASK_FREQS.map(f=>`<option ${t.freq===f?'selected':''}>${f}</option>`).join('')}</select></div>
-    <div class="form-group"><label>Next Due Date *</label><input type="date" id="f-tnext" value="${t.next_date||fmtDate(new Date())}" placeholder="Select next due date"></div>
+    <div class="form-group"><label>Next Due Date *</label><input type="text" id="f-tnext" value="${t.next_date||fmtDate(new Date())}" placeholder="YYYY-MM-DD"></div>
     <div class="form-group"><label>Notes</label><textarea id="f-tnotes">${t.notes||''}</textarea></div>
     <button class="btn-primary" onclick="saveTask('${editId||''}')">Save Task</button>`;
   openModal('modal-add');
