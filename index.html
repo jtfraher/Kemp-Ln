@@ -4,219 +4,96 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Estate Manager</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f0f0d;
-    --surface: #1a1a17;
-    --surface2: #242420;
-    --border: #2e2e28;
-    --accent: #c8a96e;
-    --accent2: #e8c98e;
-    --danger: #d4635a;
-    --success: #7ab87a;
-    --warning: #d4a853;
-    --text: #f0ede6;
-    --text2: #9e9b92;
-    --text3: #5a5850;
-    --radius: 12px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-
-  /* LOCK SCREEN */
-  #lock-screen {
-    position: fixed; inset: 0; background: var(--bg);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 1000; padding: 40px 32px;
-  }
-  .lock-logo { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--accent); margin-bottom: 8px; }
-  .lock-sub { font-size: 13px; color: var(--text3); margin-bottom: 48px; letter-spacing: 0.05em; }
-  .lock-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); font-weight: 600; margin-bottom: 10px; width: 100%; max-width: 320px; }
-  #passphrase-input {
-    width: 100%; max-width: 320px; padding: 14px 16px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); color: var(--text);
-    font-family: 'DM Sans', sans-serif; font-size: 16px;
-    outline: none; text-align: center; letter-spacing: 0.08em;
-    margin-bottom: 12px;
-  }
-  #passphrase-input:focus { border-color: var(--accent); }
-  .lock-error { color: var(--danger); font-size: 13px; min-height: 18px; margin-bottom: 12px; }
-  #lock-btn {
-    width: 100%; max-width: 320px; padding: 14px;
-    background: var(--accent); color: #1a1a17; border: none;
-    border-radius: var(--radius); font-family: 'DM Sans', sans-serif;
-    font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s;
-  }
-  #lock-btn:hover { background: var(--accent2); }
-  .lock-hint { margin-top: 20px; font-size: 12px; color: var(--text3); text-align: center; line-height: 1.6; max-width: 280px; }
-
-  /* CONFIG SCREEN */
-  #config-screen {
-    position: fixed; inset: 0; background: var(--bg);
-    display: none; flex-direction: column; padding: 60px 24px 40px;
-    z-index: 999; overflow-y: auto;
-  }
-  .config-title { font-family: 'DM Serif Display', serif; font-size: 26px; margin-bottom: 6px; }
-  .config-sub { font-size: 13px; color: var(--text2); margin-bottom: 32px; }
-  .config-step {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 16px; margin-bottom: 14px;
-  }
-  .config-step-num {
-    display: inline-block; width: 24px; height: 24px; border-radius: 50%;
-    background: var(--accent); color: #1a1a17; font-size: 12px; font-weight: 700;
-    text-align: center; line-height: 24px; margin-bottom: 10px;
-  }
-  .config-step h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-  .config-step p { font-size: 13px; color: var(--text2); line-height: 1.6; }
-  .config-step code {
-    display: inline-block; background: var(--surface2); padding: 2px 7px;
-    border-radius: 4px; font-size: 12px; color: var(--accent); font-family: monospace;
-    word-break: break-all;
-  }
-  .config-step .code-block {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; padding: 12px; margin-top: 10px;
-    font-family: monospace; font-size: 12px; color: var(--accent2);
-    white-space: pre-wrap; word-break: break-all; line-height: 1.7;
-  }
-
-  /* NAV */
-  .nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--surface); border-top: 1px solid var(--border);
-    display: flex; z-index: 100;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  .nav-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center;
-    gap: 4px; padding: 12px 8px; border: none; background: none;
-    color: var(--text3); cursor: pointer; font-family: 'DM Sans', sans-serif;
-    font-size: 10px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .nav-btn.active { color: var(--accent); }
-  .nav-btn svg { width: 22px; height: 22px; }
-
-  /* HEADER */
-  .header {
-    padding: 56px 20px 20px;
-    background: linear-gradient(180deg, rgba(200,169,110,0.08) 0%, transparent 100%);
-    border-bottom: 1px solid var(--border);
-  }
-  .header-eyebrow { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
-  .header h1 { font-family: 'DM Serif Display', serif; font-size: 28px; line-height: 1.1; }
-  .header-sub { font-size: 13px; color: var(--text2); margin-top: 6px; }
-  .sync-status { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); margin-top: 4px; }
-  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text3); }
-  .sync-dot.live { background: var(--success); }
-  .sync-dot.syncing { background: var(--warning); animation: pulse 1s infinite; }
-  .sync-dot.error { background: var(--danger); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  /* VIEWS */
-  .view { display: none; padding: 20px 20px 90px; }
-  .view.active { display: block; }
-
-  /* CARDS */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
-  .card-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); font-weight: 600; margin-bottom: 12px; }
-
-  /* STATS */
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
-  .stat-num { font-family: 'DM Serif Display', serif; font-size: 32px; line-height: 1; }
-  .stat-num.red { color: var(--danger); }
-  .stat-num.yellow { color: var(--warning); }
-  .stat-num.green { color: var(--success); }
-  .stat-num.gold { color: var(--accent); }
-  .stat-label { font-size: 11px; color: var(--text2); margin-top: 4px; }
-
-  /* TASK ITEMS */
-  .task-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
-  .task-item:last-child { border-bottom: none; }
-  .task-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-  .task-dot.overdue { background: var(--danger); }
-  .task-dot.soon { background: var(--warning); }
-  .task-dot.upcoming { background: var(--success); }
-  .task-name { font-size: 14px; font-weight: 500; }
-  .task-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
-
-  /* BUTTONS */
-  .btn-primary { width: 100%; padding: 14px; background: var(--accent); color: #1a1a17; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; letter-spacing: 0.03em; transition: background 0.2s; margin-top: 8px; }
-  .btn-primary:hover { background: var(--accent2); }
-  .btn-ghost { padding: 8px 14px; background: none; color: var(--text2); border: 1px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-sm { padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; background: var(--surface2); color: var(--text2); transition: all 0.15s; }
-  .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-sm.done { background: var(--success); border-color: var(--success); color: #fff; }
-  .btn-danger { color: var(--danger) !important; border-color: var(--danger) !important; }
-
-  /* FORMS */
-  .form-group { margin-bottom: 14px; }
-  label { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); font-weight: 600; margin-bottom: 6px; }
-  input, select, textarea { width: 100%; padding: 11px 13px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; transition: border-color 0.2s; outline: none; }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-  select option { background: var(--surface2); }
-  textarea { resize: vertical; min-height: 80px; }
-
-  /* INVENTORY */
-  .inv-item { padding: 14px; background: var(--surface2); border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border); cursor: pointer; transition: border-color 0.2s; }
-  .inv-item:hover { border-color: var(--accent); }
-  .inv-item-header { display: flex; justify-content: space-between; align-items: flex-start; }
-  .inv-item-name { font-size: 15px; font-weight: 600; }
-  .inv-item-cat { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(200,169,110,0.15); color: var(--accent); padding: 3px 8px; border-radius: 20px; font-weight: 600; }
-  .inv-item-details { font-size: 12px; color: var(--text2); margin-top: 6px; line-height: 1.6; }
-
-  /* MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: flex-end; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--surface); border-radius: 20px 20px 0 0; padding: 24px 20px; width: 100%; padding-bottom: calc(24px + env(safe-area-inset-bottom)); max-height: 90vh; overflow-y: auto; border-top: 1px solid var(--border); }
-  .modal-title { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 20px; }
-  .modal-close { float: right; background: none; border: none; color: var(--text2); font-size: 22px; cursor: pointer; line-height: 1; margin-top: -2px; }
-
-  /* BADGE */
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-  .badge-red { background: rgba(212,99,90,0.2); color: var(--danger); }
-  .badge-yellow { background: rgba(212,168,83,0.2); color: var(--warning); }
-  .badge-green { background: rgba(122,184,122,0.2); color: var(--success); }
-
-  /* NOTIFICATION BAR */
-  .notif-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: var(--success); color: #fff; padding: 12px 20px; font-size: 13px; font-weight: 500; text-align: center; transform: translateY(-100%); transition: transform 0.3s; pointer-events: none; }
-  .notif-bar.show { transform: translateY(0); }
-  .notif-bar.error-notif { background: var(--danger); }
-
-  /* FILTER CHIPS */
-  .filter-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; }
-  .filter-row::-webkit-scrollbar { display: none; }
-  .filter-chip { flex-shrink: 0; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: none; color: var(--text2); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
-  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: #1a1a17; }
-
-  .fab { position: fixed; bottom: 80px; right: 20px; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(200,169,110,0.35); z-index: 50; transition: transform 0.15s; }
-  .fab:hover { transform: scale(1.05); }
-  .fab svg { width: 22px; height: 22px; color: #1a1a17; }
-
-  .empty { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }
-  .empty-icon { font-size: 36px; margin-bottom: 10px; }
-
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+:root {
+  --bg:#0f0f0d;--surface:#1a1a17;--surface2:#242420;--border:#2e2e28;
+  --accent:#c8a96e;--accent2:#e8c98e;--danger:#d4635a;
+  --success:#7ab87a;--warning:#d4a853;
+  --text:#f0ede6;--text2:#9e9b92;--text3:#5a5850;--radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+#lock-screen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;}
+.lock-logo{font-family:'DM Serif Display',serif;font-size:36px;color:var(--accent);margin-bottom:8px;}
+.lock-sub{font-size:13px;color:var(--text3);margin-bottom:48px;letter-spacing:0.05em;}
+.lock-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:10px;width:100%;max-width:320px;}
+#passphrase-input{width:100%;max-width:320px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;text-align:center;letter-spacing:0.08em;margin-bottom:12px;}
+#passphrase-input:focus{border-color:var(--accent);}
+.lock-error{color:var(--danger);font-size:13px;min-height:18px;margin-bottom:12px;text-align:center;}
+#lock-btn{width:100%;max-width:320px;padding:14px;background:var(--accent);color:#1a1a17;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;}
+#app{display:none;}
+.header{padding:52px 20px 16px;background:linear-gradient(180deg,rgba(200,169,110,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border);}
+.header-eyebrow{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:4px;}
+.header h1{font-family:'DM Serif Display',serif;font-size:28px;}
+.header-sub{font-size:13px;color:var(--text2);margin-top:4px;}
+.sync-row{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);}
+.sync-dot.live{background:var(--success);}.sync-dot.syncing{background:var(--warning);animation:pulse 1s infinite;}.sync-dot.error{background:var(--danger);}
+.sync-label{font-size:11px;color:var(--text3);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border:none;background:none;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.2s;}
+.nav-btn.active{color:var(--accent);}
+.nav-btn svg{width:22px;height:22px;}
+.view{display:none;padding:20px 20px 90px;}
+.view.active{display:block;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;}
+.stat-num{font-family:'DM Serif Display',serif;font-size:32px;line-height:1;}
+.stat-num.red{color:var(--danger);}.stat-num.yellow{color:var(--warning);}.stat-num.green{color:var(--success);}.stat-num.gold{color:var(--accent);}
+.stat-label{font-size:11px;color:var(--text2);margin-top:4px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+.card-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:12px;}
+.task-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.task-item:last-child{border-bottom:none;}
+.task-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.task-dot.overdue{background:var(--danger);}.task-dot.soon{background:var(--warning);}.task-dot.upcoming{background:var(--success);}
+.task-name{font-size:14px;font-weight:500;}.task-meta{font-size:12px;color:var(--text2);margin-top:2px;}
+.btn-primary{width:100%;padding:14px;background:var(--accent);color:#1a1a17;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;}
+.btn-ghost{padding:8px 14px;background:none;color:var(--text2);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-sm{padding:4px 10px;border-radius:6px;border:1px solid var(--border);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;background:var(--surface2);color:var(--text2);}
+.btn-sm.done{background:var(--success);border-color:var(--success);color:#fff;}
+.btn-danger{color:var(--danger)!important;border-color:var(--danger)!important;}
+.form-group{margin-bottom:14px;}
+label{display:block;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:6px;}
+input,select,textarea{width:100%;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);}
+select option{background:var(--surface2);}
+textarea{resize:vertical;min-height:80px;}
+.inv-item{padding:14px;background:var(--surface2);border-radius:10px;margin-bottom:10px;border:1px solid var(--border);cursor:pointer;}
+.inv-item:hover{border-color:var(--accent);}
+.inv-header{display:flex;justify-content:space-between;align-items:flex-start;}
+.inv-name{font-size:15px;font-weight:600;}
+.inv-cat{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:rgba(200,169,110,0.15);color:var(--accent);padding:3px 8px;border-radius:20px;font-weight:600;flex-shrink:0;margin-left:8px;}
+.inv-details{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.6;}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
+.badge-red{background:rgba(212,99,90,0.2);color:var(--danger);}.badge-yellow{background:rgba(212,168,83,0.2);color:var(--warning);}.badge-green{background:rgba(122,184,122,0.2);color:var(--success);}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:flex-end;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px;width:100%;padding-bottom:calc(24px + env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto;border-top:1px solid var(--border);}
+.modal-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:20px;}
+.modal-close{float:right;background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer;line-height:1;}
+.fab{position:fixed;bottom:80px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,169,110,0.35);z-index:50;}
+.fab svg{width:22px;height:22px;color:#1a1a17;}
+.filter-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;}
+.filter-row::-webkit-scrollbar{display:none;}
+.filter-chip{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;}
+.filter-chip.active{background:var(--accent);border-color:var(--accent);color:#1a1a17;}
+.notif-bar{position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--success);color:#fff;padding:12px 20px;font-size:13px;font-weight:500;text-align:center;transform:translateY(-100%);transition:transform 0.3s;pointer-events:none;}
+.notif-bar.show{transform:translateY(0);}.notif-bar.err{background:var(--danger);}
+.empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;}
+.empty-icon{font-size:36px;margin-bottom:10px;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
-
 <div class="notif-bar" id="notifBar"></div>
 
-<!-- ── LOCK SCREEN ── -->
+<!-- LOCK SCREEN -->
 <div id="lock-screen">
   <div class="lock-logo">Estate Manager</div>
   <div class="lock-sub">Private Property Dashboard</div>
@@ -224,89 +101,20 @@
   <input type="password" id="passphrase-input" placeholder="••••••••" autocomplete="off">
   <div class="lock-error" id="lock-error"></div>
   <button id="lock-btn" onclick="unlock()">Enter</button>
-  <div class="lock-hint">First time? <span style="color:var(--accent);cursor:pointer" onclick="showConfig()">Setup guide →</span></div>
 </div>
 
-<!-- ── CONFIG SCREEN ── -->
-<div id="config-screen">
-  <div class="config-title">Setup Guide</div>
-  <div class="config-sub">Connect your Supabase backend in 5 minutes.</div>
-
-  <div class="config-step">
-    <div class="config-step-num">1</div>
-    <h3>Create a free Supabase account</h3>
-    <p>Go to <code>supabase.com</code> → New Project. Name it anything (e.g. "estate-manager"). Save your database password.</p>
-  </div>
-
-  <div class="config-step">
-    <div class="config-step-num">2</div>
-    <h3>Run the database setup SQL</h3>
-    <p>In your Supabase project → SQL Editor → paste and run this:</p>
-    <div class="code-block">create table inventory (
-  id text primary key,
-  name text not null,
-  cat text, model text, serial text,
-  location text, installed text, notes text,
-  created_at timestamptz default now()
-);
-
-create table tasks (
-  id text primary key,
-  name text not null,
-  inv_id text references inventory(id) on delete set null,
-  freq text, next_date text, notes text,
-  last_done text,
-  created_at timestamptz default now()
-);
-
--- Allow public read/write (app uses passphrase for access control)
-alter table inventory enable row level security;
-alter table tasks enable row level security;
-create policy "public_all" on inventory for all using (true) with check (true);
-create policy "public_all" on tasks for all using (true) with check (true);</div>
-  </div>
-
-  <div class="config-step">
-    <div class="config-step-num">3</div>
-    <h3>Get your API credentials</h3>
-    <p>Project Settings → API → copy your <code>Project URL</code> and <code>anon public</code> key.</p>
-  </div>
-
-  <div class="config-step">
-    <div class="config-step-num">4</div>
-    <h3>Add credentials to this file</h3>
-    <p>Open <code>home-manager.html</code> in a text editor. Find the CONFIG block near the top of the &lt;script&gt; and fill in your URL, key, and a passphrase you'll share with your household.</p>
-    <div class="code-block">const CONFIG = {
-  SUPABASE_URL: 'https://wtubcgzdbpmqeniccujy.supabase.co/rest/v1/',
-  SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0dWJjZ3pkYnBtcWVuaWNjdWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NzA5MTgsImV4cCI6MjA5MjU0NjkxOH0.AuKxKl_QSWl9Eg6vfQUzXLO4AYM43Xscpd-xg4zfUlE',
-  PASSPHRASE:   'kempln'
-};</div>
-  </div>
-
-  <div class="config-step">
-    <div class="config-step-num">5</div>
-    <h3>Deploy to GitHub Pages</h3>
-    <p>Create a GitHub repo → upload the file as <code>index.html</code> → Settings → Pages → Deploy from main branch. Share the URL with your household.</p>
-  </div>
-
-  <button class="btn-primary" style="max-width:320px;margin:0 auto;display:block" onclick="hideConfig()">← Back to Login</button>
-  <div style="height:40px"></div>
-</div>
-
-<!-- ── MAIN APP ── -->
-<div id="app" style="display:none">
-
+<!-- MAIN APP -->
+<div id="app">
   <div class="header">
     <div class="header-eyebrow">Estate Manager</div>
     <h1 id="headerTitle">Dashboard</h1>
-    <div class="header-sub" id="headerSub">Loading...</div>
-    <div class="sync-status">
+    <div class="header-sub" id="headerSub"></div>
+    <div class="sync-row">
       <div class="sync-dot" id="syncDot"></div>
-      <span id="syncLabel">Connecting...</span>
+      <span class="sync-label" id="syncLabel">—</span>
     </div>
   </div>
 
-  <!-- DASHBOARD -->
   <div class="view active" id="view-dashboard">
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-num red" id="stat-overdue">—</div><div class="stat-label">Overdue</div></div>
@@ -316,25 +124,23 @@ create policy "public_all" on tasks for all using (true) with check (true);</div
     </div>
     <div class="card">
       <div class="card-label">Needs Attention</div>
-      <div id="attention-list"><div class="spinner"></div></div>
+      <div id="attention-list"><div class="empty"><div class="spinner"></div></div></div>
     </div>
     <div class="card">
       <div class="card-label">Coming Up — Next 30 Days</div>
-      <div id="upcoming-list"><div class="spinner"></div></div>
+      <div id="upcoming-list"><div class="empty"><div class="spinner"></div></div></div>
     </div>
-    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
       <button class="btn-ghost" onclick="requestNotifPermission()">🔔 Enable Alerts</button>
       <button class="btn-ghost" onclick="doLock()">🔒 Lock</button>
     </div>
   </div>
 
-  <!-- INVENTORY -->
   <div class="view" id="view-inventory">
     <div class="filter-row" id="cat-filters"></div>
     <div id="inventory-list"><div class="empty"><div class="spinner"></div></div></div>
   </div>
 
-  <!-- TASKS -->
   <div class="view" id="view-tasks">
     <div id="tasks-list"><div class="empty"><div class="spinner"></div></div></div>
   </div>
@@ -359,7 +165,6 @@ create policy "public_all" on tasks for all using (true) with check (true);</div
   </nav>
 </div>
 
-<!-- ADD MODAL -->
 <div class="modal-overlay" id="modal-add">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-add')">×</button>
@@ -368,7 +173,6 @@ create policy "public_all" on tasks for all using (true) with check (true);</div
   </div>
 </div>
 
-<!-- DETAIL MODAL -->
 <div class="modal-overlay" id="modal-detail">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-detail')">×</button>
@@ -377,450 +181,255 @@ create policy "public_all" on tasks for all using (true) with check (true);</div
 </div>
 
 <script>
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ⚙️  CONFIG — fill this in before deploying
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CONFIG — edit these three values
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const CONFIG = {
-  SUPABASE_URL: 'YOUR_SUPABASE_URL',      // e.g. https://abcdefgh.supabase.co
-  SUPABASE_KEY: 'YOUR_SUPABASE_ANON_KEY', // long eyJhbGci... string
-  PASSPHRASE:   'YOUR_SHARED_PASSPHRASE'  // anything you want, share with household
+  SUPABASE_URL: 'https://wtubcgzdbpmqeniccujy.supabase.co/rest/v1/',
+  SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0dWJjZ3pkYnBtcWVuaWNjdWp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NzA5MTgsImV4cCI6MjA5MjU0NjkxOH0.AuKxKl_QSWl9Eg6vfQUzXLO4AYM43Xscpd-xg4zfUlE',
+  PASSPHRASE:   'kempln'
 };
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const INV_CATS = ['HVAC','Plumbing','Electrical','Appliance','Exterior','Landscaping','Pool/Spa','Structural','Security','Other'];
-const TASK_FREQS = ['One-time','Weekly','Monthly','Quarterly','Semi-Annual','Annual','Every 2 Years','Every 5 Years'];
-const FREQ_DAYS  = {Weekly:7,Monthly:30,Quarterly:91,'Semi-Annual':182,Annual:365,'Every 2 Years':730,'Every 5 Years':1825};
+const INV_CATS=['HVAC','Plumbing','Electrical','Appliance','Exterior','Landscaping','Pool/Spa','Structural','Security','Other'];
+const TASK_FREQS=['One-time','Weekly','Monthly','Quarterly','Semi-Annual','Annual','Every 2 Years','Every 5 Years'];
+const FREQ_DAYS={Weekly:7,Monthly:30,Quarterly:91,'Semi-Annual':182,Annual:365,'Every 2 Years':730,'Every 5 Years':1825};
+let inventory=[],tasks=[],invFilter='All';
+const view={name:'dashboard'};
 
-let inventory = [];
-let tasks = [];
-let invFilter = 'All';
-const currentView = { name: 'dashboard' };
-let configured = false;
-
-// ── AUTH ──────────────────────────────────────────
-function unlock() {
-  const val = document.getElementById('passphrase-input').value;
-  if (!CONFIG.SUPABASE_URL || CONFIG.SUPABASE_URL === 'YOUR_SUPABASE_URL') {
-    showConfig(); return;
-  }
-  if (val === CONFIG.PASSPHRASE) {
-    sessionStorage.setItem('em_auth', '1');
-    document.getElementById('lock-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    document.getElementById('lock-error').textContent = '';
+function unlock(){
+  const val=document.getElementById('passphrase-input').value;
+  if(val===CONFIG.PASSPHRASE){
+    sessionStorage.setItem('em_auth','1');
+    document.getElementById('lock-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('lock-error').textContent='';
     initApp();
   } else {
-    document.getElementById('lock-error').textContent = 'Incorrect passphrase';
-    document.getElementById('passphrase-input').value = '';
+    document.getElementById('lock-error').textContent='Incorrect passphrase';
+    document.getElementById('passphrase-input').value='';
   }
 }
-document.getElementById('passphrase-input').addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
+document.getElementById('passphrase-input').addEventListener('keydown',e=>{if(e.key==='Enter')unlock();});
 
-function doLock() {
+function doLock(){
   sessionStorage.removeItem('em_auth');
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('lock-screen').style.display = 'flex';
-  document.getElementById('passphrase-input').value = '';
+  document.getElementById('app').style.display='none';
+  document.getElementById('lock-screen').style.display='flex';
+  document.getElementById('passphrase-input').value='';
 }
 
-function showConfig() {
-  document.getElementById('lock-screen').style.display = 'none';
-  document.getElementById('config-screen').style.display = 'flex';
-}
-function hideConfig() {
-  document.getElementById('config-screen').style.display = 'none';
-  document.getElementById('lock-screen').style.display = 'flex';
+if(sessionStorage.getItem('em_auth')&&CONFIG.PASSPHRASE!=='YOUR_SHARED_PASSPHRASE'){
+  document.getElementById('lock-screen').style.display='none';
+  document.getElementById('app').style.display='block';
 }
 
-// Auto-unlock if session active
-if (sessionStorage.getItem('em_auth') && CONFIG.PASSPHRASE !== 'YOUR_SHARED_PASSPHRASE') {
-  document.getElementById('lock-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-}
-
-// ── SUPABASE API ──────────────────────────────────
-const SB = {
-  headers: () => ({
-    'Content-Type': 'application/json',
-    'apikey': CONFIG.SUPABASE_KEY,
-    'Authorization': `Bearer ${CONFIG.SUPABASE_KEY}`,
-    'Prefer': 'return=representation'
-  }),
-  url: (table, params='') => `${CONFIG.SUPABASE_URL}/rest/v1/${table}${params}`,
-
-  async get(table) {
-    const r = await fetch(SB.url(table, '?order=created_at.asc'), { headers: SB.headers() });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
-  },
-  async insert(table, row) {
-    const r = await fetch(SB.url(table), { method:'POST', headers: SB.headers(), body: JSON.stringify(row) });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
-  },
-  async update(table, id, patch) {
-    const r = await fetch(SB.url(table, `?id=eq.${id}`), { method:'PATCH', headers: SB.headers(), body: JSON.stringify(patch) });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
-  },
-  async delete(table, id) {
-    const r = await fetch(SB.url(table, `?id=eq.${id}`), { method:'DELETE', headers: SB.headers() });
-    if (!r.ok) throw new Error(await r.text());
-  }
+const SB={
+  h:()=>({'Content-Type':'application/json','apikey':CONFIG.SUPABASE_KEY,'Authorization':`Bearer ${CONFIG.SUPABASE_KEY}`,'Prefer':'return=representation'}),
+  url:(t,q='')=>`${CONFIG.SUPABASE_URL}/rest/v1/${t}${q}`,
+  async get(t){const r=await fetch(SB.url(t,'?order=created_at.asc'),{headers:SB.h()});if(!r.ok)throw new Error(await r.text());return r.json();},
+  async insert(t,row){const r=await fetch(SB.url(t),{method:'POST',headers:SB.h(),body:JSON.stringify(row)});if(!r.ok)throw new Error(await r.text());return r.json();},
+  async update(t,id,patch){const r=await fetch(SB.url(t,`?id=eq.${id}`),{method:'PATCH',headers:SB.h(),body:JSON.stringify(patch)});if(!r.ok)throw new Error(await r.text());return r.json();},
+  async del(t,id){const r=await fetch(SB.url(t,`?id=eq.${id}`),{method:'DELETE',headers:SB.h()});if(!r.ok)throw new Error(await r.text());}
 };
 
-// ── INIT ──────────────────────────────────────────
-async function initApp() {
-  setSyncStatus('syncing', 'Syncing...');
-  try {
-    [inventory, tasks] = await Promise.all([SB.get('inventory'), SB.get('tasks')]);
-    setSyncStatus('live', 'Live');
+async function initApp(){
+  sync('syncing','Syncing...');
+  try{
+    [inventory,tasks]=await Promise.all([SB.get('inventory'),SB.get('tasks')]);
+    sync('live','Live');
     renderDashboard();
-    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') scheduleNotifCheck();
-  } catch(e) {
-    setSyncStatus('error', 'Connection error');
-    showNotif('Could not connect to database. Check your CONFIG.', true);
-    console.error(e);
-  }
+    if(typeof Notification!=='undefined'&&Notification.permission==='granted')scheduleNotifs();
+  }catch(e){sync('error','Connection error');notify('Could not connect. Check CONFIG values.',true);}
 }
 
-function setSyncStatus(state, label) {
-  const dot = document.getElementById('syncDot');
-  dot.className = 'sync-dot ' + state;
-  document.getElementById('syncLabel').textContent = label;
+function sync(state,label){
+  document.getElementById('syncDot').className='sync-dot '+state;
+  document.getElementById('syncLabel').textContent=label;
 }
 
-// ── UTILS ─────────────────────────────────────────
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-function fmtDate(d) { return d.toISOString().split('T')[0]; }
-function today() { return new Date(); }
-function parseDate(s) { return new Date(s + 'T12:00:00'); }
-function daysUntil(s) { return Math.round((parseDate(s) - today()) / 86400000); }
-function displayDate(s) { return parseDate(s).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
-function urgency(s) { const d = daysUntil(s); return d < 0 ? 'overdue' : d <= 7 ? 'soon' : 'upcoming'; }
-function urgencyLabel(s) {
-  const d = daysUntil(s);
-  if (d < 0) return `${Math.abs(d)}d overdue`;
-  if (d === 0) return 'Due today';
-  if (d <= 7) return `Due in ${d}d`;
-  return displayDate(s);
-}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function fmtDate(d){return d.toISOString().split('T')[0];}
+function parseDate(s){return new Date(s+'T12:00:00');}
+function daysUntil(s){return Math.round((parseDate(s)-new Date())/86400000);}
+function displayDate(s){return parseDate(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function urgency(s){const d=daysUntil(s);return d<0?'overdue':d<=7?'soon':'upcoming';}
+function urgencyLabel(s){const d=daysUntil(s);if(d<0)return `${Math.abs(d)}d overdue`;if(d===0)return 'Due today';if(d<=7)return `Due in ${d}d`;return displayDate(s);}
 
-// ── VIEWS ─────────────────────────────────────────
-function switchView(name) {
-  currentView.name = name;
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('view-' + name).classList.add('active');
+function switchView(name){
+  view.name=name;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
   document.querySelector(`[data-view="${name}"]`).classList.add('active');
-  const titles = { dashboard:'Dashboard', inventory:'Inventory', tasks:'Maintenance Tasks' };
-  document.getElementById('headerTitle').textContent = titles[name];
-  if (name === 'dashboard') renderDashboard();
-  if (name === 'inventory') renderInventory();
-  if (name === 'tasks') renderTasks();
+  document.getElementById('headerTitle').textContent={dashboard:'Dashboard',inventory:'Inventory',tasks:'Maintenance Tasks'}[name];
+  if(name==='dashboard')renderDashboard();
+  if(name==='inventory')renderInventory();
+  if(name==='tasks')renderTasks();
 }
 
-// ── DASHBOARD ─────────────────────────────────────
-function renderDashboard() {
-  const overdue  = tasks.filter(t => daysUntil(t.next_date) < 0);
-  const soon     = tasks.filter(t => { const d = daysUntil(t.next_date); return d >= 0 && d <= 7; });
-  const upcoming = tasks.filter(t => { const d = daysUntil(t.next_date); return d > 7 && d <= 30; });
-
-  document.getElementById('stat-overdue').textContent  = overdue.length;
-  document.getElementById('stat-soon').textContent     = soon.length;
-  document.getElementById('stat-upcoming').textContent = upcoming.length;
-  document.getElementById('stat-inventory').textContent = inventory.length;
-  document.getElementById('headerSub').textContent = `${inventory.length} items · ${tasks.length} tasks`;
-
-  const attn = [...overdue, ...soon].sort((a,b) => daysUntil(a.next_date) - daysUntil(b.next_date));
-  document.getElementById('attention-list').innerHTML = attn.length
-    ? attn.map(taskRow).join('')
-    : '<div class="empty"><div class="empty-icon">✓</div>All caught up!</div>';
-
-  document.getElementById('upcoming-list').innerHTML = upcoming.length
-    ? upcoming.map(taskRow).join('')
-    : '<div class="empty"><div class="empty-icon">📅</div>Nothing in the next 30 days</div>';
+function renderDashboard(){
+  const overdue=tasks.filter(t=>daysUntil(t.next_date)<0);
+  const soon=tasks.filter(t=>{const d=daysUntil(t.next_date);return d>=0&&d<=7;});
+  const upcoming=tasks.filter(t=>{const d=daysUntil(t.next_date);return d>7&&d<=30;});
+  document.getElementById('stat-overdue').textContent=overdue.length;
+  document.getElementById('stat-soon').textContent=soon.length;
+  document.getElementById('stat-upcoming').textContent=upcoming.length;
+  document.getElementById('stat-inventory').textContent=inventory.length;
+  document.getElementById('headerSub').textContent=`${inventory.length} items · ${tasks.length} tasks`;
+  const attn=[...overdue,...soon].sort((a,b)=>daysUntil(a.next_date)-daysUntil(b.next_date));
+  document.getElementById('attention-list').innerHTML=attn.length?attn.map(taskRow).join(''):'<div class="empty"><div class="empty-icon">✓</div>All caught up!</div>';
+  document.getElementById('upcoming-list').innerHTML=upcoming.length?upcoming.map(taskRow).join(''):'<div class="empty"><div class="empty-icon">📅</div>Nothing in the next 30 days</div>';
 }
 
-function taskRow(t) {
-  const u = urgency(t.next_date);
-  const inv = inventory.find(i => i.id === t.inv_id);
-  return `<div class="task-item">
-    <div class="task-dot ${u}"></div>
-    <div style="flex:1;min-width:0">
-      <div class="task-name">${t.name}</div>
-      <div class="task-meta">${urgencyLabel(t.next_date)}${inv ? ' · ' + inv.name : ''}</div>
-    </div>
-    <button class="btn-sm done" onclick="markDone('${t.id}')">Done</button>
-  </div>`;
+function taskRow(t){
+  const inv=inventory.find(i=>i.id===t.inv_id);
+  return `<div class="task-item"><div class="task-dot ${urgency(t.next_date)}"></div><div style="flex:1;min-width:0"><div class="task-name">${t.name}</div><div class="task-meta">${urgencyLabel(t.next_date)}${inv?' · '+inv.name:''}</div></div><button class="btn-sm done" onclick="markDone('${t.id}')">Done</button></div>`;
 }
 
-// ── INVENTORY ─────────────────────────────────────
-function renderInventory() {
-  const cats = ['All', ...new Set(inventory.map(i => i.cat))];
-  document.getElementById('cat-filters').innerHTML = cats.map(c =>
-    `<button class="filter-chip ${c === invFilter ? 'active':''}" onclick="setInvFilter('${c}')">${c}</button>`
-  ).join('');
-
-  const filtered = invFilter === 'All' ? inventory : inventory.filter(i => i.cat === invFilter);
-  document.getElementById('inventory-list').innerHTML = filtered.length
-    ? filtered.map(item => `
-      <div class="inv-item" onclick="showInvDetail('${item.id}')">
-        <div class="inv-item-header">
-          <div class="inv-item-name">${item.name}</div>
-          <div class="inv-item-cat">${item.cat}</div>
-        </div>
-        <div class="inv-item-details">
-          ${item.model ? `Model: ${item.model}` : ''}
-          ${item.location ? ` · ${item.location}` : ''}
-          ${item.installed ? ` · Installed ${displayDate(item.installed)}` : ''}
-        </div>
-      </div>`).join('')
-    : '<div class="empty"><div class="empty-icon">📦</div>No items yet — tap + to add</div>';
+function renderInventory(){
+  const cats=['All',...new Set(inventory.map(i=>i.cat))];
+  document.getElementById('cat-filters').innerHTML=cats.map(c=>`<button class="filter-chip ${c===invFilter?'active':''}" onclick="setFilter('${c}')">${c}</button>`).join('');
+  const filtered=invFilter==='All'?inventory:inventory.filter(i=>i.cat===invFilter);
+  document.getElementById('inventory-list').innerHTML=filtered.length
+    ?filtered.map(item=>`<div class="inv-item" onclick="showInvDetail('${item.id}')"><div class="inv-header"><div class="inv-name">${item.name}</div><div class="inv-cat">${item.cat}</div></div><div class="inv-details">${[item.model&&'Model: '+item.model,item.location,item.installed&&'Installed '+displayDate(item.installed)].filter(Boolean).join(' · ')}</div></div>`).join('')
+    :'<div class="empty"><div class="empty-icon">📦</div>No items yet — tap + to add</div>';
 }
-function setInvFilter(c) { invFilter = c; renderInventory(); }
+function setFilter(c){invFilter=c;renderInventory();}
 
-function showInvDetail(id) {
-  const item = inventory.find(i => i.id === id);
-  const relTasks = tasks.filter(t => t.inv_id === id);
-  document.getElementById('modal-detail-body').innerHTML = `
-    <div style="margin-bottom:16px">
-      <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:4px">${item.cat}</div>
-      <div style="font-family:'DM Serif Display',serif;font-size:22px">${item.name}</div>
-    </div>
-    ${[['Model',item.model],['Serial',item.serial],['Location',item.location],
-       ['Installed',item.installed?displayDate(item.installed):''],['Notes',item.notes]]
-      .filter(([,v])=>v).map(([k,v])=>`
-      <div style="margin-bottom:12px">
-        <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:2px">${k}</div>
-        <div style="font-size:14px;color:var(--text2)">${v}</div>
-      </div>`).join('')}
-    ${relTasks.length ? `<div style="margin-top:16px"><div class="card-label">Linked Tasks</div>
-      ${relTasks.map(t=>`<div class="task-item">
-        <div class="task-dot ${urgency(t.next_date)}"></div>
-        <div><div class="task-name">${t.name}</div><div class="task-meta">${urgencyLabel(t.next_date)}</div></div>
-      </div>`).join('')}</div>` : ''}
-    <div style="display:flex;gap:10px;margin-top:20px">
-      <button class="btn-ghost" onclick="editInv('${id}')">Edit</button>
-      <button class="btn-ghost btn-danger" onclick="deleteInv('${id}')">Delete</button>
-    </div>`;
+function showInvDetail(id){
+  const item=inventory.find(i=>i.id===id);
+  const rel=tasks.filter(t=>t.inv_id===id);
+  document.getElementById('modal-detail-body').innerHTML=`
+    <div style="margin-bottom:16px"><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:4px">${item.cat}</div><div style="font-family:'DM Serif Display',serif;font-size:22px">${item.name}</div></div>
+    ${[['Model',item.model],['Serial',item.serial],['Location',item.location],['Installed',item.installed?displayDate(item.installed):''],['Notes',item.notes]].filter(([,v])=>v).map(([k,v])=>`<div style="margin-bottom:12px"><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:2px">${k}</div><div style="font-size:14px;color:var(--text2)">${v}</div></div>`).join('')}
+    ${rel.length?`<div style="margin-top:16px"><div class="card-label">Linked Tasks</div>${rel.map(t=>`<div class="task-item"><div class="task-dot ${urgency(t.next_date)}"></div><div><div class="task-name">${t.name}</div><div class="task-meta">${urgencyLabel(t.next_date)}</div></div></div>`).join('')}</div>`:''}
+    <div style="display:flex;gap:10px;margin-top:20px"><button class="btn-ghost" onclick="editInv('${id}')">Edit</button><button class="btn-ghost btn-danger" onclick="deleteInv('${id}')">Delete</button></div>`;
   openModal('modal-detail');
 }
 
-// ── TASKS VIEW ────────────────────────────────────
-function renderTasks() {
-  const sorted = [...tasks].sort((a,b) => daysUntil(a.next_date) - daysUntil(b.next_date));
-  document.getElementById('tasks-list').innerHTML = sorted.length
-    ? sorted.map(t => {
-        const u = urgency(t.next_date);
-        const inv = inventory.find(i => i.id === t.inv_id);
-        const badge = u==='overdue'?'badge-red':u==='soon'?'badge-yellow':'badge-green';
-        const label = u==='overdue'?'OVERDUE':u==='soon'?'SOON':'UPCOMING';
-        return `<div class="card" style="margin-bottom:10px">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-            <div style="font-size:16px;font-weight:600;flex:1;padding-right:8px">${t.name}</div>
-            <span class="badge ${badge}">${label}</span>
-          </div>
-          <div style="font-size:13px;color:var(--text2);margin-bottom:4px">${displayDate(t.next_date)} · ${t.freq}</div>
-          ${inv ? `<div style="font-size:12px;color:var(--text3)">🔧 ${inv.name}</div>` : ''}
-          ${t.notes ? `<div style="font-size:12px;color:var(--text3);margin-top:4px">${t.notes}</div>` : ''}
-          <div style="display:flex;gap:8px;margin-top:12px">
-            <button class="btn-sm done" onclick="markDone('${t.id}')">✓ Done</button>
-            <button class="btn-sm" onclick="editTask('${t.id}')">Edit</button>
-            <button class="btn-sm btn-danger" onclick="deleteTask('${t.id}')">Delete</button>
-          </div>
-        </div>`;
+function renderTasks(){
+  const sorted=[...tasks].sort((a,b)=>daysUntil(a.next_date)-daysUntil(b.next_date));
+  document.getElementById('tasks-list').innerHTML=sorted.length
+    ?sorted.map(t=>{
+        const inv=inventory.find(i=>i.id===t.inv_id);
+        const u=urgency(t.next_date);
+        return `<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:16px;font-weight:600;flex:1;padding-right:8px">${t.name}</div><span class="badge ${u==='overdue'?'badge-red':u==='soon'?'badge-yellow':'badge-green'}">${u==='overdue'?'OVERDUE':u==='soon'?'SOON':'UPCOMING'}</span></div><div style="font-size:13px;color:var(--text2);margin-bottom:4px">${displayDate(t.next_date)} · ${t.freq}</div>${inv?`<div style="font-size:12px;color:var(--text3)">🔧 ${inv.name}</div>`:''}${t.notes?`<div style="font-size:12px;color:var(--text3);margin-top:4px">${t.notes}</div>`:''}<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-sm done" onclick="markDone('${t.id}')">✓ Done</button><button class="btn-sm" onclick="editTask('${t.id}')">Edit</button><button class="btn-sm btn-danger" onclick="deleteTask('${t.id}')">Delete</button></div></div>`;
       }).join('')
-    : '<div class="empty"><div class="empty-icon">📋</div>No tasks yet — tap + to add</div>';
+    :'<div class="empty"><div class="empty-icon">📋</div>No tasks yet — tap + to add</div>';
 }
 
-// ── ACTIONS ───────────────────────────────────────
-async function markDone(id) {
-  const t = tasks.find(t => t.id === id);
-  if (!t) return;
-  const today_str = fmtDate(new Date());
-  const days = FREQ_DAYS[t.freq];
-  let patch = { last_done: today_str };
-  if (days) {
-    const next = new Date(); next.setDate(next.getDate() + days);
-    patch.next_date = fmtDate(next);
-    Object.assign(t, patch);
-    setSyncStatus('syncing','Saving...');
-    try { await SB.update('tasks', id, patch); setSyncStatus('live','Live'); } catch(e) { setSyncStatus('error','Save failed'); }
-  } else {
-    // One-time task — delete it
-    await deleteTask(id); return;
-  }
-  showNotif(`✓ "${t.name}" marked complete`);
-  if (currentView.name === 'dashboard') renderDashboard();
-  if (currentView.name === 'tasks') renderTasks();
+async function markDone(id){
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  const days=FREQ_DAYS[t.freq];
+  if(days){
+    const next=new Date();next.setDate(next.getDate()+days);
+    const patch={last_done:fmtDate(new Date()),next_date:fmtDate(next)};
+    Object.assign(t,patch);sync('syncing','Saving...');
+    try{await SB.update('tasks',id,patch);sync('live','Live');}catch(e){sync('error','Save failed');}
+  } else {await deleteTask(id);return;}
+  notify(`✓ "${t.name}" marked complete`);
+  if(view.name==='dashboard')renderDashboard();
+  if(view.name==='tasks')renderTasks();
 }
 
-async function deleteInv(id) {
-  if (!confirm('Delete this item?')) return;
-  setSyncStatus('syncing','Saving...');
-  try {
-    await SB.delete('inventory', id);
-    inventory = inventory.filter(i => i.id !== id);
-    tasks.forEach(t => { if (t.inv_id === id) t.inv_id = null; });
-    setSyncStatus('live','Live');
-    closeModal('modal-detail'); renderInventory();
-    showNotif('Item deleted');
-  } catch(e) { setSyncStatus('error','Delete failed'); showNotif('Delete failed', true); }
+async function deleteInv(id){
+  if(!confirm('Delete this item?'))return;
+  sync('syncing','Saving...');
+  try{await SB.del('inventory',id);inventory=inventory.filter(i=>i.id!==id);sync('live','Live');closeModal('modal-detail');renderInventory();notify('Item deleted');}
+  catch(e){sync('error','Delete failed');notify('Delete failed',true);}
 }
 
-async function deleteTask(id) {
-  setSyncStatus('syncing','Saving...');
-  try {
-    await SB.delete('tasks', id);
-    tasks = tasks.filter(t => t.id !== id);
-    setSyncStatus('live','Live');
-    if (currentView.name === 'tasks') renderTasks();
-    if (currentView.name === 'dashboard') renderDashboard();
-  } catch(e) { setSyncStatus('error','Delete failed'); showNotif('Delete failed', true); }
+async function deleteTask(id){
+  sync('syncing','Saving...');
+  try{await SB.del('tasks',id);tasks=tasks.filter(t=>t.id!==id);sync('live','Live');if(view.name==='tasks')renderTasks();if(view.name==='dashboard')renderDashboard();}
+  catch(e){sync('error','Delete failed');notify('Delete failed',true);}
 }
 
-// ── FORMS ─────────────────────────────────────────
-function openAddModal() {
-  if (currentView.name === 'inventory') openInvForm();
-  else openTaskForm();
-}
+function openAddModal(){if(view.name==='inventory')openInvForm();else openTaskForm();}
 
-function openInvForm(editId) {
-  const item = editId ? inventory.find(i => i.id === editId) : {};
-  document.getElementById('modal-add-title').textContent = editId ? 'Edit Item' : 'Add Inventory Item';
-  document.getElementById('modal-add-body').innerHTML = `
+function openInvForm(editId){
+  const item=editId?inventory.find(i=>i.id===editId):{};
+  document.getElementById('modal-add-title').textContent=editId?'Edit Item':'Add Inventory Item';
+  document.getElementById('modal-add-body').innerHTML=`
     <div class="form-group"><label>Name *</label><input id="f-name" value="${item.name||''}" placeholder="e.g. Carrier HVAC Main Floor"></div>
     <div class="form-group"><label>Category</label><select id="f-cat">${INV_CATS.map(c=>`<option ${item.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
-    <div class="form-group"><label>Model / Make</label><input id="f-model" value="${item.model||''}" placeholder="e.g. Carrier 24ACC636A003"></div>
+    <div class="form-group"><label>Model / Make</label><input id="f-model" value="${item.model||''}" placeholder="Model number"></div>
     <div class="form-group"><label>Serial Number</label><input id="f-serial" value="${item.serial||''}" placeholder="Serial #"></div>
-    <div class="form-group"><label>Location in Home</label><input id="f-location" value="${item.location||''}" placeholder="e.g. Utility Room, Garage"></div>
+    <div class="form-group"><label>Location in Home</label><input id="f-location" value="${item.location||''}" placeholder="e.g. Utility Room"></div>
     <div class="form-group"><label>Install Date</label><input type="date" id="f-installed" value="${item.installed||''}"></div>
     <div class="form-group"><label>Notes</label><textarea id="f-notes">${item.notes||''}</textarea></div>
     <button class="btn-primary" onclick="saveInv('${editId||''}')">Save Item</button>`;
   openModal('modal-add');
 }
 
-async function saveInv(editId) {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) { alert('Name is required'); return; }
-  const row = {
-    id: editId || uid(), name,
-    cat:      document.getElementById('f-cat').value,
-    model:    document.getElementById('f-model').value.trim(),
-    serial:   document.getElementById('f-serial').value.trim(),
-    location: document.getElementById('f-location').value.trim(),
-    installed:document.getElementById('f-installed').value || null,
-    notes:    document.getElementById('f-notes').value.trim(),
-  };
-  setSyncStatus('syncing','Saving...');
-  try {
-    if (editId) {
-      await SB.update('inventory', editId, row);
-      const i = inventory.findIndex(x => x.id === editId); inventory[i] = row;
-    } else {
-      await SB.insert('inventory', row);
-      inventory.push(row);
-    }
-    setSyncStatus('live','Live');
-    closeModal('modal-add'); closeModal('modal-detail');
-    showNotif(editId ? '✓ Item updated' : '✓ Item added');
-    renderInventory();
-  } catch(e) { setSyncStatus('error','Save failed'); showNotif('Save failed — check connection', true); }
+async function saveInv(editId){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){alert('Name is required');return;}
+  const row={id:editId||uid(),name,cat:document.getElementById('f-cat').value,model:document.getElementById('f-model').value.trim(),serial:document.getElementById('f-serial').value.trim(),location:document.getElementById('f-location').value.trim(),installed:document.getElementById('f-installed').value||null,notes:document.getElementById('f-notes').value.trim()};
+  sync('syncing','Saving...');
+  try{
+    if(editId){await SB.update('inventory',editId,row);const i=inventory.findIndex(x=>x.id===editId);inventory[i]=row;}
+    else{await SB.insert('inventory',row);inventory.push(row);}
+    sync('live','Live');closeModal('modal-add');closeModal('modal-detail');notify(editId?'✓ Item updated':'✓ Item added');renderInventory();
+  }catch(e){sync('error','Save failed');notify('Save failed',true);}
 }
+function editInv(id){closeModal('modal-detail');openInvForm(id);}
 
-function editInv(id) { closeModal('modal-detail'); openInvForm(id); }
-
-function openTaskForm(editId) {
-  const t = editId ? tasks.find(x => x.id === editId) : {};
-  document.getElementById('modal-add-title').textContent = editId ? 'Edit Task' : 'Add Maintenance Task';
-  document.getElementById('modal-add-body').innerHTML = `
+function openTaskForm(editId){
+  const t=editId?tasks.find(x=>x.id===editId):{};
+  document.getElementById('modal-add-title').textContent=editId?'Edit Task':'Add Maintenance Task';
+  document.getElementById('modal-add-body').innerHTML=`
     <div class="form-group"><label>Task Name *</label><input id="f-tname" value="${t.name||''}" placeholder="e.g. Replace HVAC Filters"></div>
-    <div class="form-group"><label>Linked Item (optional)</label>
-      <select id="f-tinv">
-        <option value="">— None —</option>
-        ${inventory.map(i=>`<option value="${i.id}" ${t.inv_id===i.id?'selected':''}>${i.name}</option>`).join('')}
-      </select>
-    </div>
-    <div class="form-group"><label>Frequency</label>
-      <select id="f-tfreq">${TASK_FREQS.map(f=>`<option ${t.freq===f?'selected':''}>${f}</option>`).join('')}</select>
-    </div>
+    <div class="form-group"><label>Linked Item (optional)</label><select id="f-tinv"><option value="">— None —</option>${inventory.map(i=>`<option value="${i.id}" ${t.inv_id===i.id?'selected':''}>${i.name}</option>`).join('')}</select></div>
+    <div class="form-group"><label>Frequency</label><select id="f-tfreq">${TASK_FREQS.map(f=>`<option ${t.freq===f?'selected':''}>${f}</option>`).join('')}</select></div>
     <div class="form-group"><label>Next Due Date *</label><input type="date" id="f-tnext" value="${t.next_date||fmtDate(new Date())}"></div>
     <div class="form-group"><label>Notes</label><textarea id="f-tnotes">${t.notes||''}</textarea></div>
     <button class="btn-primary" onclick="saveTask('${editId||''}')">Save Task</button>`;
   openModal('modal-add');
 }
 
-async function saveTask(editId) {
-  const name = document.getElementById('f-tname').value.trim();
-  const next_date = document.getElementById('f-tnext').value;
-  if (!name || !next_date) { alert('Name and date are required'); return; }
-  const row = {
-    id: editId || uid(), name,
-    inv_id:    document.getElementById('f-tinv').value || null,
-    freq:      document.getElementById('f-tfreq').value,
-    next_date,
-    notes:     document.getElementById('f-tnotes').value.trim(),
-    last_done: editId ? tasks.find(x=>x.id===editId)?.last_done : null
-  };
-  setSyncStatus('syncing','Saving...');
-  try {
-    if (editId) {
-      await SB.update('tasks', editId, row);
-      const i = tasks.findIndex(x => x.id === editId); tasks[i] = row;
-    } else {
-      await SB.insert('tasks', row);
-      tasks.push(row);
-    }
-    setSyncStatus('live','Live');
-    closeModal('modal-add');
-    showNotif(editId ? '✓ Task updated' : '✓ Task added');
-    if (currentView.name === 'tasks') renderTasks();
-    if (currentView.name === 'dashboard') renderDashboard();
-  } catch(e) { setSyncStatus('error','Save failed'); showNotif('Save failed — check connection', true); }
+async function saveTask(editId){
+  const name=document.getElementById('f-tname').value.trim();
+  const next_date=document.getElementById('f-tnext').value;
+  if(!name||!next_date){alert('Name and date are required');return;}
+  const row={id:editId||uid(),name,inv_id:document.getElementById('f-tinv').value||null,freq:document.getElementById('f-tfreq').value,next_date,notes:document.getElementById('f-tnotes').value.trim(),last_done:editId?tasks.find(x=>x.id===editId)?.last_done:null};
+  sync('syncing','Saving...');
+  try{
+    if(editId){await SB.update('tasks',editId,row);const i=tasks.findIndex(x=>x.id===editId);tasks[i]=row;}
+    else{await SB.insert('tasks',row);tasks.push(row);}
+    sync('live','Live');closeModal('modal-add');notify(editId?'✓ Task updated':'✓ Task added');
+    if(view.name==='tasks')renderTasks();
+    if(view.name==='dashboard')renderDashboard();
+  }catch(e){sync('error','Save failed');notify('Save failed',true);}
+}
+function editTask(id){openTaskForm(id);}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+function notify(msg,isErr=false){
+  const b=document.getElementById('notifBar');
+  b.textContent=msg;b.className='notif-bar show'+(isErr?' err':'');
+  setTimeout(()=>b.classList.remove('show'),3500);
+}
+async function requestNotifPermission(){
+  if(!('Notification' in window)){notify('Not supported in this browser',true);return;}
+  const p=await Notification.requestPermission();
+  if(p==='granted'){notify('✓ Notifications enabled!');scheduleNotifs();}
+  else notify('Blocked — check browser settings',true);
+}
+function scheduleNotifs(){checkNotifs();setInterval(checkNotifs,3600000);}
+function checkNotifs(){
+  if(typeof Notification==='undefined'||Notification.permission!=='granted')return;
+  const overdue=tasks.filter(t=>daysUntil(t.next_date)<0);
+  const soon=tasks.filter(t=>{const d=daysUntil(t.next_date);return d>=0&&d<=3;});
+  if(overdue.length)new Notification('Estate Manager',{body:`${overdue.length} overdue: ${overdue.slice(0,2).map(t=>t.name).join(', ')}`});
+  else if(soon.length)new Notification('Estate Manager',{body:`${soon.length} task${soon.length>1?'s':''} due in 3 days`});
 }
 
-function editTask(id) { openTaskForm(id); }
-
-// ── MODALS ────────────────────────────────────────
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
-});
-
-// ── NOTIFICATIONS ─────────────────────────────────
-function showNotif(msg, isError=false) {
-  const bar = document.getElementById('notifBar');
-  bar.textContent = msg;
-  bar.className = 'notif-bar show' + (isError ? ' error-notif' : '');
-  setTimeout(() => bar.classList.remove('show'), 3500);
-}
-
-async function requestNotifPermission() {
-  if (!('Notification' in window)) { showNotif('Notifications not supported in this browser', true); return; }
-  const perm = await Notification.requestPermission();
-  if (perm === 'granted') { showNotif('✓ Notifications enabled!'); scheduleNotifCheck(); }
-  else showNotif('Notifications blocked — check browser settings', true);
-}
-
-function scheduleNotifCheck() { checkAndNotify(); setInterval(checkAndNotify, 3600000); }
-function checkAndNotify() {
-  if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
-  const overdue = tasks.filter(t => daysUntil(t.next_date) < 0);
-  const soon = tasks.filter(t => { const d = daysUntil(t.next_date); return d >= 0 && d <= 3; });
-  if (overdue.length) new Notification('Estate Manager — Overdue Tasks', {
-    body: `${overdue.length} task${overdue.length>1?'s':''} overdue: ${overdue.slice(0,2).map(t=>t.name).join(', ')}`
-  });
-  else if (soon.length) new Notification('Estate Manager — Due Soon', {
-    body: `${soon.length} task${soon.length>1?'s':''} due in the next 3 days`
-  });
-}
-
-// ── AUTO INIT ─────────────────────────────────────
-if (sessionStorage.getItem('em_auth') && CONFIG.PASSPHRASE !== 'YOUR_SHARED_PASSPHRASE') {
-  initApp();
-}
+if(sessionStorage.getItem('em_auth')&&CONFIG.PASSPHRASE!=='YOUR_SHARED_PASSPHRASE'){initApp();}
 </script>
 </body>
 </html>
